@@ -126,8 +126,8 @@ answers = removeCharacter(f_a.readlines(), "\n")
 f_q.close()
 f_a.close()
 
-processed_questions = processDocument("/Users/cankutcoskun/Desktop/ChatBotProject/QnA/questions.txt")
-processed_answers = processDocument("/Users/cankutcoskun/Desktop/ChatBotProject/QnA/answers.txt")
+processed_questions = processDocument("./questions.txt")
+processed_answers = processDocument("./answers.txt")
 
 ##Edge
 processed_answers[145] = ""

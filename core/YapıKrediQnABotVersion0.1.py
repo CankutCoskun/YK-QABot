@@ -1,16 +1,7 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# ## Yapı Kredi QnA BoT version 0.1
-
-# In[1]:
-
+### Yapı Kredi QnA BoT version 0.1
 
 #!!!!There are duplicate Quetions and Answers 
 #It does not effect te result. It reponses the best match
-
-
-# In[3]:
 
 
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -18,37 +9,12 @@ from sklearn.metrics.pairwise import cosine_similarity
 import pandas as pd
 import requests
 
-
-# In[4]:
-
-
 def removeCharacter(list_of_sent , char):
     new_list = []
     for each in list_of_sent:
         to_be_added = each.replace(char, "")
         new_list.append(to_be_added)
     return new_list
-
-
-# In[5]:
-
-
-questions = []
-answers = []
-
-f_q = open("/Users/cankutcoskun/Desktop/ChatBotProject/QnA/questions.txt")
-f_a = open("/Users/cankutcoskun/Desktop/ChatBotProject/QnA/answers.txt")
-
-questions = removeCharacter(f_q.readlines(), "\n")
-answers = removeCharacter(f_a.readlines(), "\n")
-
-
-f_q.close()
-f_a.close()
-
-
-# In[6]:
-
 
 def processDocument(path):
     
@@ -76,55 +42,8 @@ def processDocument(path):
     else:
         raise Exception("WARNING REQUEST DOES NOT WORK PROPERLY \n response code: " + str(response.status_code))
 
-
-# In[7]:
-
-
-processed_questions = processDocument("/Users/cankutcoskun/Desktop/ChatBotProject/QnA/questions.txt")
-processed_answers = processDocument("/Users/cankutcoskun/Desktop/ChatBotProject/QnA/answers.txt")
-
-##Edge
-processed_answers[145] = ""
-
-
-# In[12]:
-
-
-processed_qnas = []
-
-for i in range(len(processed_questions)):
-    qna = processed_questions[i] + " "+processed_answers[i]
-    processed_qnas.append(qna)
-
-
-# In[13]:
-
-
-vectorizer = TfidfVectorizer(sublinear_tf=True, max_df=1.0, min_df = 0, use_idf = True)
-bow = vectorizer.fit_transform(processed_qnas)
-
-freqs = [(word, bow.getcol(idx).sum()) for word, idx in vectorizer.vocabulary_.items()]
-results = sorted (freqs, key = lambda x: -x[1])
-print("Number of unique words (size of dictionary):", len(vectorizer.vocabulary_.items()))
-
-
-# In[17]:
-
-
-feature_names = vectorizer.get_feature_names()
-corpus_index = [n for n in processed_questions]
-
-df = pd.DataFrame(bow.todense(), columns=feature_names)
-
-#( num of questions , size of vocab)
-print(df.shape)
-
-df.head(5)
-
-
-# In[26]:
-
-
+        
+        
 def processInput(raw_inp):
     
     emptyList = []
@@ -140,12 +59,8 @@ def processInput(raw_inp):
         return True, text.rstrip("]").lstrip("[").replace('"','').split(",")
     else:
         return False, emptyList
-        
 
-
-# In[27]:
-
-
+    
 def rankingTable(scores):
     ranking_table = []
 
@@ -154,10 +69,6 @@ def rankingTable(scores):
         ranking_table.append(temp)
         
     return ranking_table
-
-
-# In[28]:
-
 
 def bestMatchIdx(raw_inp):
 
@@ -191,14 +102,7 @@ def bestMatchIdx(raw_inp):
     
     ranking_table = rankingTable(score_list[0:-1])
     
-    #for each in ranking_table:
-    #   print(each)
-        
     return best_match_idx
-
-
-# In[29]:
-
 
 def userInputBestMatch(inp):
     bestIdx = bestMatchIdx(inp)
@@ -210,12 +114,48 @@ def userInputBestMatch(inp):
         print(questions[bestIdx])
         print(answers[bestIdx])
 
-    
+questions = []
+answers = []
+
+f_q = open("questions.txt")
+f_a = open("answers.txt")
+
+questions = removeCharacter(f_q.readlines(), "\n")
+answers = removeCharacter(f_a.readlines(), "\n")
+
+f_q.close()
+f_a.close()
+
+processed_questions = processDocument("/Users/cankutcoskun/Desktop/ChatBotProject/QnA/questions.txt")
+processed_answers = processDocument("/Users/cankutcoskun/Desktop/ChatBotProject/QnA/answers.txt")
+
+##Edge
+processed_answers[145] = ""
+processed_qnas = []
+
+for i in range(len(processed_questions)):
+    qna = processed_questions[i] + " "+processed_answers[i]
+    processed_qnas.append(qna)
+
+vectorizer = TfidfVectorizer(sublinear_tf=True, max_df=1.0, min_df = 0, use_idf = True)
+bow = vectorizer.fit_transform(processed_qnas)
+
+freqs = [(word, bow.getcol(idx).sum()) for word, idx in vectorizer.vocabulary_.items()]
+results = sorted (freqs, key = lambda x: -x[1])
+print("Number of unique words (size of dictionary):", len(vectorizer.vocabulary_.items()))
+
+feature_names = vectorizer.get_feature_names()
+corpus_index = [n for n in processed_questions]
+
+df = pd.DataFrame(bow.todense(), columns=feature_names)
+
+#( num of questions , size of vocab)
+print(df.shape)
+
+df.head(5)
 
 
-# In[ ]:
-
-
+################################################
 print("sonlandırmak için lütfen 'çıkış' yazın\n")
 
 inp = input("Ne öğrenmek istersin? \n\n") 

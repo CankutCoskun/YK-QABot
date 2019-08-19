@@ -1,7 +1,3 @@
-19.08.2019 
-Cankut Coskun 
-cankutcoskun@sabanciuniv.edu
-Istanbul/Turkey
 
 Turkish NLP web service:
 
@@ -53,3 +49,9 @@ Save posted document in the database for later use.
 Entity: Document
 	 -docId (automatically generated)
 	 -docContent  
+
+
+19.08.2019 
+Cankut Coskun 
+cankutcoskun@sabanciuniv.edu
+Istanbul/Turkey

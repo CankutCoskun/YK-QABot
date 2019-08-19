@@ -1,21 +1,23 @@
 
 '''
-15.08.2019
-Cankut Coskun
-cankutcoskun@sabanciuniv.edu
-
 ## Yapı Kredi QnA BoT version 0.1
-# Keyword search based on tfidf frequency scores
-# !!!! There are duplicate Quetions !!!!
-# It does not effect te result. It reponses the best matches
 
-#Make sure TurkishNlp service is running at localhost port: 8080 to run following functions
-#-processInput(), processDocument()
+Defintion:
+This program is a Question&Answer bot which brings the top 5 best match among a predefined set of questions.
 
-#Cosine similarity is a metric used to determine how similar the documents are irrespective of their size.
-#Mathematically, it measures the cosine of the angle between two vectors projected in a multi-dimensional space.
-#The cosine similarity is advantageous because even if the two similar documents are far apart by the Euclidean distance because of the size
-#they could still have a smaller angle between them. Smaller the angle, higher the similarity.
+Questions and corresponding answers represented in the same order. Text files are available under the same directory with source code.
+	./QnA/questions.txt
+	./QnA/answers.txt
+Warning!
+There are duplicate quetions. This problem might be avoided by checking uniqueness.
+
+Make sure TurkishNlp service is running at localhost port: 8080 for Nlp process.
+processInput(), processDocument()
+
+#15.08.2019
+#Cankut Coskun
+#cankutcoskun@sabanciuniv.edu
+#Istanbul/Turkey
 '''
 
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -24,15 +26,19 @@ import pandas as pd
 import requests
 import os
 
-def removeCharacter(list_of_sent , char):
+def delEmpty(list_of_sent):
     new_list = []
     for each in list_of_sent:
-        to_be_added = each.replace(char, "")
+        to_be_added = each.replace('\n', "")
         new_list.append(to_be_added)
     return new_list
 
-questions_path = "/Users/cankutcoskun/Desktop/SummerInternshipProject/Core/QnA/questions.txt"
-answers_path = "/Users/cankutcoskun/Desktop/SummerInternshipProject/Core/QnA/answers.txt"
+dirpath = os.getcwd()
+
+print("current directory is : " + dirpath)
+
+questions_path = dirpath + "/QnA/questions.txt"
+answers_path = dirpath +"/QnA/answers.txt"
 
 questions = []
 answers = []
@@ -40,8 +46,8 @@ answers = []
 f_q = open(questions_path)
 f_a = open(answers_path)
 
-questions = removeCharacter(f_q.readlines(), "\n")
-answers = removeCharacter(f_a.readlines(), "\n")
+questions = delEmpty(f_q.readlines())
+answers = delEmpty(f_a.readlines())
 
 f_q.close()
 f_a.close()
@@ -141,8 +147,8 @@ def main():
 
     while inp != "çıkış":
         ids = bestMatchIds(inp)
-        for idx in ids:
-            print("\n",questions[idx],"\n")
+        for idx in reversed(ids):
+            print("\n" + questions[idx] + "\n")
             print(answers[idx],"\n")
             print("*****************")
         inp = input("\nNe öğrenmek istersin?  \n\n")

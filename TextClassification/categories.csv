@@ -1,0 +1,19 @@
+Category,Category_Id
+Web Formları,0
+Mobil Bankacılık,1
+İnternet Şubesi,2
+Güvenlik Ürünleri,3
+ATM,4
+Üye İşyeri,5
+Kredi Kartları,6
+Banka Kartları,7
+Vadesiz Hesap,8
+Genel,9
+Vadeli Hesap,10
+Altın Hesabı,11
+Konut,12
+Esnek Hesap,13
+Taşıt,14
+Bireysel İhtiyaç,15
+SWIFT,16
+Düzenli Ödeme,17

@@ -1,0 +1,55 @@
+19.08.2019 
+Cankut Coskun 
+cankutcoskun@sabanciuniv.edu
+Istanbul/Turkey
+
+Turkish NLP web service:
+
+This service is developed for Turkish Natural Language Processing:
+Spring Framework is used for building Restful web service.
+Service runs at localhost port 8080:
+
+Accepts 2 types of Get requests:
+1-)Single string:
+	 Calling service: http://localhost:8080/nlpPipeLine/singleInput
+	-Parameters: 'rawInput' It accepts a single input to be processed. 
+		ex: rawInput= selamlar test ediliyorum ...!! Büyük küçük harf duyarlı değilim
+	-Returns: list of processed tokens as a string
+		ex: "["selam","test","et","büyük","küçük","harf","duyarlı","değil"]"
+2-)Document:
+	Calling service: http://localhost:8080/nlpPipeLine/document
+	-Parameters: 'docPathName' It accepts absolute path name of the document to be processed.
+		ex: docPathName= /TurkishNlpService/Test.txt
+		Document format:
+			Language: Turkish 
+			Encoding: UTF-8
+			Each input must be separated by a new line character. 
+		ex: Test.txt
+		    Bu birinci satır.
+		    Bu da ikinci satır.
+	-Returns: List of list of processed tokens as a string
+		ex: "[["bu","birinci","satır"],["bu","ikinci","satır"]]"
+
+Zemberek:
+Zemberek is an open source Turkish NLP Library which is primarily used in our project
+	ref: https://github.com/ahmetaa/zemberek-nlp
+
+Provided Utilities:
+	- Tokeniser
+	- Sentence Extractor
+	- Lemmatiser
+	- Tokens-writer
+
+Nlp Pipeline:
+	-Convert to lower case.
+	-Remove punctuation marks and numeric characters.
+	-Remove stop words
+	-Tokenisation 
+	-Lemmatisation 	
+	-Disambiguation by examining the context.
+
+Post request: 
+Save posted document in the database for later use. 
+Entity: Document
+	 -docId (automatically generated)
+	 -docContent  

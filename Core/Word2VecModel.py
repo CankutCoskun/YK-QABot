@@ -28,7 +28,7 @@ from gensim.models import KeyedVectors
 
 #Input: docs (List of list of Strings)
 
-f = open("/Users/cankutcoskun/Desktop/SummerInternshipProject/Core/docs_processed.txt")
+f = open(os.getcwd() + "/docs_processed.txt")
 content = f.read()
 data = content.split("\n")
 

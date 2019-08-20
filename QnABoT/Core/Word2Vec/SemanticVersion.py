@@ -1,11 +1,6 @@
-
 '''
-15.08.2019
-Cankut Coskun
-cankutcoskun@sabanciuniv.edu
-
 ## Yapı Kredi QnA BoT version 0.2
-# Semantic search using a word2vec embeddings
+# based on semantic search using word2vec embeddings
 # Each wordvector is represented as a point in a 200 dimensional hyperspace
 
 ###Corpus details:
@@ -13,27 +8,27 @@ cankutcoskun@sabanciuniv.edu
 ##Processed with zemberek (nlp tool for Turkish) ( https://github.com/ahmetaa/zemberek-nlp )
 ##Make sure TurkishNlp service is running at localhost port: 8080
 
-#Cosine similarity is a metric used to determine how similar the documents are irrespective of their size.
-#Mathematically, it measures the cosine of the angle between two vectors projected in a multi-dimensional space.
-#The cosine similarity is advantageous because even if the two similar documents are far apart by the Euclidean distance because of the size
-#they could still have a smaller angle between them. Smaller the angle, higher the similarity.
-
+15.08.2019
+Cankut Coskun
+cankutcoskun@sabanciuniv.edu
 '''
 from gensim.models import Word2Vec
 from gensim.test.utils import get_tmpfile
 from gensim.models import KeyedVectors
 import requests
 import operator
+import os
 
-questions_path = "/Users/cankutcoskun/Desktop/SummerInternshipProject/Core/QnA/questions.txt"
-answers_path = "/Users/cankutcoskun/Desktop/SummerInternshipProject/Core/QnA/answers.txt"
+cdir = os.getcwd()
+questions_path = cdir + "/QnA/questions.txt"
+answers_path = cdir + "/QnA/answers.txt"
 
 ##Load a pre-trained model
-model = KeyedVectors.load('/Users/cankutcoskun/Desktop/SummerInternshipProject/Core/Word2VecModel/myModel')
+model = KeyedVectors.load(cdir + "/word2vec.model")
 word_vectors = model.wv
+
 ##Initiliaze vocabulary
 vocabulary = list(model.wv.vocab.keys())
-
 
 def removeCharacter(list_of_sent , char):
     new_list = []
@@ -66,7 +61,6 @@ def processDocument(path):
         for r in resp_list:
             tokens = r.split(",")
             all_tokens.append(tokens)
-
 
         return all_tokens
 
@@ -126,7 +120,7 @@ def topResponses(inp):
     ranking_table = rankingTable(scores)
     ranking_table.sort(key = operator.itemgetter(1),reverse = True)
     topResp = []
-    for tup in ranking_table[0:5]:
+    for tup in ranking_table[0:10]:
         idx = tup[0]
         topResp.append(idx)
 
@@ -142,15 +136,14 @@ processed_qnas = [a + b for a, b in zip(processed_questions, processed_answers)]
 
 def main():
     print("Sonlandırmak için lütfen 'çıkış' yazın \n")
-    inp = input("Ne öğrenmek istersin? \n\n")
+    inp = input("\nNe öğrenmek istersin? \n")
     while inp != "çıkış":
         ids = topResponses(inp)
         for idx in ids:
-            print(idx)
             print(questions[idx])
             print(answers[idx])
 
-        inp = input("Ne öğrenmek istersin?  \n\n")
+        inp = input("\nNe öğrenmek istersin?  \n\n")
 
 if __name__ == "__main__":
     main()

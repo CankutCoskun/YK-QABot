@@ -5,6 +5,7 @@
 
 ###Corpus details:
 ##Financial news retrieved from bloomberght.com
+
 ##Processed with zemberek (nlp tool for Turkish) ( https://github.com/ahmetaa/zemberek-nlp )
 ##Make sure TurkishNlp service is running at localhost port: 8080
 
@@ -65,7 +66,7 @@ def processDocument(path):
         return all_tokens
 
     else:
-        raise Exception("WARNING REQUEST DOES NOT WORK PROPERLY \n response code: " + str(response.status_code))
+        raise Exception("\nWARNING REQUEST DOES NOT WORK PROPERLY \n response code: " + str(response.status_code))
 
 #Compute cosine similarity between two sets of words.
 def similarity_scores(inp):
@@ -73,10 +74,11 @@ def similarity_scores(inp):
     for idx in range(len(processed_questions)):
 
         try:
-            similarity_score = model.wv.n_similarity(processed_qnas[idx], inp)
+            similarity_score = model.wv.n_similarity(processed_questions[idx], inp)
             similarity_scores.append(similarity_score)
         except:
-            print("WARNING EMPTY INPUT")
+            print("\nWARNING EMPTY INPUT")
+            break
 
     return similarity_scores
 
@@ -95,15 +97,16 @@ def processInput(raw_inp):
 
     response = requests.get("http://localhost:8080/nlpPipeLine/singleInput", params = PARAMS)
 
-    print("Response Code: ", response.status_code,"\n")
+    print("\nResponse Code: ", response.status_code)
 
     if response.status_code == requests.codes.ok:
         text = response.text
         input_tokens = text.rstrip("]").lstrip("[").replace('"','').split(",")
+        print(input_tokens)
         return checkInputWords(input_tokens)
 
     else:
-        raise Exception("WARNING REQUEST ERROR ")
+        raise Exception("\nWARNING REQUEST ERROR ")
 
 def rankingTable(scores):
     ranking_table = []
@@ -120,8 +123,10 @@ def topResponses(inp):
     ranking_table = rankingTable(scores)
     ranking_table.sort(key = operator.itemgetter(1),reverse = True)
     topResp = []
-    for tup in ranking_table[0:10]:
+    for tup in ranking_table[0:5]:
         idx = tup[0]
+
+        print(tup)
         topResp.append(idx)
 
     return topResp
@@ -133,17 +138,23 @@ processed_answers[145] =[]
 
 ##Comibe questions and answers to retrieve semantically more relevant atomic units.
 processed_qnas = [a + b for a, b in zip(processed_questions, processed_answers)]
+###
 
 def main():
-    print("Sonlandırmak için lütfen 'çıkış' yazın \n")
-    inp = input("\nNe öğrenmek istersin? \n")
+    print("\nSonlandırmak için lütfen 'çıkış' yazın")
+
+    inp = input("\nNe öğrenmek istersin?\n")
     while inp != "çıkış":
         ids = topResponses(inp)
         for idx in ids:
-            print(questions[idx])
-            print(answers[idx])
+            print("***********")
+            print(idx)
+            print(questions[idx]+"\n")
+            print(answers[idx]+"\n")
 
-        inp = input("\nNe öğrenmek istersin?  \n\n")
+        print("----------------")
+        inp = input("\nNe öğrenmek istersin?\n")
+
 
 if __name__ == "__main__":
     main()

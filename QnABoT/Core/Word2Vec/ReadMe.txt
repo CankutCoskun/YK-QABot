@@ -4,18 +4,6 @@ Yapı Kredi QnA BoT version 0.2
 Defintion:
 This program is a Question&Answer bot which brings the top 5 best match among a predefined set of questions based on semantic search.
 
-Technical details:
-
-Questions and corresponding answers represented in the same order. Text files are available at: 
- ./QnA/questions.txt
- ./QnA/answers.txt
-
-!Warning!
-There are duplicate quetions due to source of data. This problem might be avoided by checking uniqueness. Since it does not affect the robustness of this program, I simply ignored! 
-
-Make sure TurkishNlp service is running at localhost port: 8080 for Nlp.
-Methods calling service: processInput(), processDocument()
-
 Methodology:
 Vector space models (VSMs) represent (embed) words in a continuous vector space where semantically similar words are mapped to nearby points
 
